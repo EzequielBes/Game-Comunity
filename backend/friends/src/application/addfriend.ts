@@ -11,13 +11,12 @@ export class AddFriend {
   ) {}
 
   async execute (input:friend) {
-    console.log(input)
     const sendedRequestFriend = await this.databaseConnection.findFriendship(input.me, input.friend);
-    if(sendedRequestFriend) return ("Voce ja enviou um pedido de amizade para essa pessoa");
+    if(sendedRequestFriend) throw new Error("Request friend already exists")
     const receivedRequestFriend = await this.databaseConnection.findFriendship(input.friend, input.me)
     if(receivedRequestFriend) {
-      const accept = await Friend.accept(input.me, input.friend)
-      this.databaseConnection.createfriend(accept);
+      const acceptRequest = await Friend.accept(input.me, input.friend)
+      this.databaseConnection.createfriend(acceptRequest);
       this.databaseConnection.updatefriend(input.friend, input.me)
       return "Pedido de amizade aceito"
     }

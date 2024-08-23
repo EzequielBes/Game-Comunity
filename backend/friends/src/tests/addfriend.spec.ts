@@ -1,6 +1,6 @@
-import { Friend } from "../domain/entity/createFriendship"
-import { PostgresDatabaseConnection } from "../infra/database/databaseConnection/database"
-import { FriendsDatabaseRepository } from "../infra/database/repository/addFriendRepository"
+import { PostgresDatabaseConnection } from "../database/databaseConnection/database"
+import { FriendsDatabaseRepository } from "../database/repository/addFriendRepository"
+import { Friend } from "../entity/createFriendship"
 
 
 
@@ -42,6 +42,7 @@ test("Devo aceitar um pedido de amizade", async () => {
   expect(searchForFriendInDatabase).toBeDefined()
 
 })
+
 
 
 
