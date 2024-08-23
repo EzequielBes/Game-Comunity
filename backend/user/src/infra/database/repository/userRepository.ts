@@ -4,10 +4,10 @@ import { DatabaseConnection } from "../databaseConnection/database";
 
 
 export interface UserRepository {
-  getByEmail(email:string): Promise<any>;
+  getByEmail(email:string): Promise<Account | undefined>;
   saveAccount(account: Account):Promise<void>;
   delete(email: string): Promise<void>;
-  getById(account_id:string): Promise<Account>;
+  getById(account_id:string): Promise<Account | undefined>;
 
 }
 
@@ -16,9 +16,9 @@ export class UserRepositoryDatabase implements UserRepository{
 
   constructor (readonly databaseConnection: DatabaseConnection) {}
 
- async getById(account_id: string): Promise<Account> {
+  async getById(account_id: string) {
     const [accountData] = await this.databaseConnection.query('SELECT * FROM "user_table" WHERE account_id = $1', [account_id]);
-    if(!accountData) throw new Error("account not exists")
+    if(!accountData) return
     return Account.restore(accountData.account_id, accountData.name, accountData.username, accountData.email, accountData.password)
   }
 

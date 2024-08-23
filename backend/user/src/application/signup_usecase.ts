@@ -11,8 +11,8 @@ export class Signup {
     const accountExists = await this.databaseConnection.getByEmail(input.email);
     if(accountExists) throw new Error("Account already exists");
     const account = Account.create(input.name, input.username, input.email, input.password);
-    console.log(account)
-    const saveAccount = await this.databaseConnection.saveAccount(account);
+    await this.databaseConnection.saveAccount(account);
+    return "Account created"
 }
 
 }
