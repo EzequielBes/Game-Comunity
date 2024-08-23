@@ -6,6 +6,9 @@ export interface FriendsDatabase {
   createfriend(friend: Friend):Promise<void>;
   updatefriend(friend: string, me : string) : Promise<void>
   removefriend(me: string, friend:string):Promise<void>;
+
+  findAllFriends(userId:string):Promise<any>
+  pendentRequests(userId: string):Promise<any>
 }
 
 
@@ -15,13 +18,27 @@ export class FriendsDatabaseRepository implements FriendsDatabase {
     readonly databaseConnection : DatabaseConnection
   ) {}
 
+  async pendentRequests(userId: string): Promise<any> {
+
+    const pendentRequest = await this.databaseConnection.query('SELECT * FROM "friendships" WHERE friend = $1 AND status = $2', [userId, 'pending'])
+    console.log(pendentRequest)
+    if(!pendentRequest) return
+    return pendentRequest
+  }
+
+  async findAllFriends(userId: string): Promise<any> {
+    const friends = await this.databaseConnection.query('SELECT * FROM "friendships" WHERE me = $1 AND status = $2', [userId, 'accepted'])
+    if(!friends) return
+    return friends
+  }
+
   async updatefriend(friend: string, me: string): Promise<void> {
     await  this.databaseConnection.query('UPDATE "friendships" SET status = $1 WHERE me = $2 AND friend = $3', ['accepted', friend , me])
   }
 
 
-  findFriendship(me: string, friend: string): Promise<any> {
-    const friends = this.databaseConnection.query('SELECT * FROM "friendships" WHERE me = $1 AND friend = $2',
+  async findFriendship(me: string, friend: string): Promise<any> {
+    const [friends] = await this.databaseConnection.query('SELECT * FROM "friendships" WHERE me = $1 AND friend = $2',
     [me, friend])
     return friends
   }

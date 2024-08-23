@@ -1,6 +1,6 @@
 
 import { Friend } from "../entity/createFriendship";
-import { FriendsDatabase } from "../repository/addFriendRepository";
+import { FriendsDatabase } from "../database/repository/addFriendRepository";
 
 
 
@@ -11,8 +11,9 @@ export class AddFriend {
   ) {}
 
   async execute (input:friend) {
+    console.log(input)
     const sendedRequestFriend = await this.databaseConnection.findFriendship(input.me, input.friend);
-    if(sendedRequestFriend) throw new Error("Voce ja enviou um pedido de amizade para essa pessoa");
+    if(sendedRequestFriend) return ("Voce ja enviou um pedido de amizade para essa pessoa");
     const receivedRequestFriend = await this.databaseConnection.findFriendship(input.friend, input.me)
     if(receivedRequestFriend) {
       const accept = await Friend.accept(input.me, input.friend)

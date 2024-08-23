@@ -16,7 +16,9 @@ export class CryptoPassword {
 
   static async decrypt(password: string, databasePassword: string): Promise<boolean> {
     try {
+      console.log(password, databasePassword)
       const result = await bcrypt.compare(password, databasePassword);
+      console.log(result)
       return result;
     } catch (error) {
       throw new Error("Erro ao comparar as senhas");
