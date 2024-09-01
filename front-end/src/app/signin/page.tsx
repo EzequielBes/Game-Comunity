@@ -1,6 +1,6 @@
 "use client";
-import { signinUser } from "@/api/users";
 import { InputComp } from "@/components/inputcomponent";
+import { signinUser } from "@/gateway/users";
 import { decodeJwtToken } from "@/jwt/decode";
 import { Button } from "@chakra-ui/button";
 import { FormControl } from "@chakra-ui/form-control";

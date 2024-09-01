@@ -1,24 +1,12 @@
 "use client"
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
-import {
-  Box,
-  Flex,
-  Input,
-  Button,
-  Text,
-  VStack,
-  HStack,
-  Avatar,
-  List,
-  ListItem,
-  IconButton,
-} from '@chakra-ui/react';
-import { getAllfriends, getPendentRequest, addfriends } from '@/api/friends';
 import { PrivateChat } from '@/components/chatcomponent';
 import { ContactComponent } from '@/components/contantscomponent';
-
-const socket = io('http://localhost:3005');
+import socket from '@/domain/socket';
+import { addfriends, getAllfriends, getPendentRequest } from '@/gateway/friends';
+import {
+    Flex
+} from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
 
 const Chat: React.FC = () => {
   const [messages, setMessages] = useState<string[]>([]);
@@ -29,20 +17,13 @@ const Chat: React.FC = () => {
   const [accountId, setAccountId] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedAccountId = localStorage.getItem('account_id');
+    const storedAccountId = localStorage.getItem('username');
     setAccountId(storedAccountId);
   }, []);
 
   useEffect(() => {
     if (accountId) {
       socket.emit('registerAccountId', accountId);
-      socket.on('receiveMessage', (message: string) => {
-        setMessages((prevMessages) => [...prevMessages, message]);
-      });
-
-      return () => {
-        socket.off('receiveMessage');
-      };
     }
   }, [accountId]);
 
@@ -86,12 +67,7 @@ const Chat: React.FC = () => {
     }
   }, [accountId]);
 
-  const handleSend = () => {
-    if (input.trim()) {
-      socket.emit('sendMessage', input);
-      setInput('');
-    }
-  };
+
 
   const handleAddContact = async () => {
     if (newContact.trim() && accountId) {
@@ -110,9 +86,9 @@ const Chat: React.FC = () => {
       console.error('User is not logged in');
     }
   };
-  const [selectedContact, setSelectedContact] = useState<{ username: string; userid: string } | null>(null);
+  const [selectedContact, setSelectedContact] = useState<{ friend: string; me: string } | null>(null);
 
-  const handleContactClick = (contact: { username: string; userid: string }) => {
+  const handleContactClick = (contact: { friend: string; me: string }) => {
     setSelectedContact(contact);
     console.log("Contato selecionado:", contact);
     // Aqui você pode fazer outras ações com os dados do contato
@@ -125,11 +101,9 @@ const Chat: React.FC = () => {
       </Flex>
       <Flex flex={2}>
       <PrivateChat destinatario={{
-        username: selectedContact?.username,
-        userid: selectedContact?.userid
+          friend: selectedContact?.friend,
       }} enviador={{
-          username: 'Ezequiel',
-          userid: '223'
+         sender: accountId,
       }} />
 
       </Flex>

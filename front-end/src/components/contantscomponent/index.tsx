@@ -1,13 +1,13 @@
 "use client";
 
-import { addfriends, getAllfriends, getPendentRequest } from "@/api/friends";
+import { addfriends, getAllfriends, getPendentRequest } from "@/gateway/friends";
 import { Box, Button, Flex, Icon, Input, Text, VStack } from "@chakra-ui/react";
 import { CheckCircle, User, UserPlus, Users, XCircle } from "phosphor-react";
 import { useEffect, useState } from "react";
 
 type FriendRequest = {
-  username: string;
-  account_id: string;
+  friend: string;
+  me: string;
 };
 
 interface ContactComponentProps {

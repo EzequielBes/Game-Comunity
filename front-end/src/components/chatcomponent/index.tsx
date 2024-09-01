@@ -1,40 +1,76 @@
+import socket from "@/domain/socket";
 import { Box, Button, Flex, Icon, Input, Text } from "@chakra-ui/react";
 import { User } from "phosphor-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Message = {
   text: string;
   sender: "me" | "them";
+  timestamp: string;
 };
 
 type ChatProps = {
   destinatario: {
-    username: string | undefined;
-    userid: string | undefined;
+    friend: string | undefined;
   };
   enviador: {
-    username: string;
-    userid: string;
+    sender: string;
   };
 };
 
 export function PrivateChat({ destinatario, enviador }: ChatProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<{ [key: string]: Message[] }>({});
   const [newMessage, setNewMessage] = useState("");
 
   const handleSubmitMessage = () => {
     if (newMessage.trim() !== "") {
-      setMessages([...messages, { text: newMessage, sender: "me" }]);
+      const updatedMessages = [
+        ...(messages[destinatario.friend || ""] || []),
+        { text: newMessage, sender: "me", timestamp: new Date().toLocaleTimeString() },
+      ];
+      setMessages({
+        ...messages,
+        [destinatario.friend || ""]: updatedMessages,
+      });
       setNewMessage("");
+      socket.emit("send-message", {
+        recipient: destinatario.friend,
+        sender: enviador.sender,
+        message: newMessage,
+        timestamp: new Date().toLocaleTimeString(),
+      });
     }
   };
+
+  useEffect(() => {
+    const handleReceiveMessage = (data: any) => {
+      if (data.sender === destinatario.friend) {
+        const updatedMessages = [
+          ...(messages[data.sender] || []),
+          { text: data.content, sender: "them", timestamp: data.timestamp },
+        ];
+        setMessages({
+          ...messages,
+          [data.sender]: updatedMessages,
+        });
+      }
+    };
+
+    socket.on("message-received", handleReceiveMessage);
+
+    return () => {
+      socket.off("message-received", handleReceiveMessage);
+    };
+  }, [messages, destinatario.friend]);
+
+  const currentMessages = messages[destinatario.friend || ""] || [];
 
   return (
     <Box bg="gray.900" w="100%" h="100vh" p={4}>
       <Flex bg="gray.800" p={4} alignItems="center">
         <Icon as={User} boxSize={8} color="purple.400" />
         <Text ml={2} color="white" fontWeight="bold" fontSize="lg">
-          {destinatario.username}
+          {destinatario.friend}
         </Text>
       </Flex>
 
@@ -46,7 +82,7 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
         p={4}
         overflowY="auto"
       >
-        {messages.map((message, index) => (
+        {currentMessages.map((message, index) => (
           <Flex
             key={index}
             justify={message.sender === "me" ? "flex-end" : "flex-start"}

@@ -1,13 +1,13 @@
 "use client"
 
-import { Button, FormControl, FormLabel } from "@chakra-ui/react";
-import { Box, Flex } from "@chakra-ui/layout";
-import Image from "next/image";
-import sign from "../../signup.png";
 import { InputComp } from "@/components/inputcomponent";
-import { useForm, Controller } from "react-hook-form";
+import { signupUser } from "@/gateway/users";
+import { Box, Flex } from "@chakra-ui/layout";
+import { Button, FormControl, FormLabel } from "@chakra-ui/react";
+import Image from "next/image";
 import { useState } from "react";
-import { signupUser } from "@/api/users";
+import { Controller, useForm } from "react-hook-form";
+import sign from "../../signup.png";
 
 interface FormData {
   "full-name": string;

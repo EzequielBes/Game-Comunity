@@ -17,15 +17,23 @@ export class SocketAdapter {
 
     socket.on("registerAccountId", (accountId) => {
       this.users[accountId.trim()] = socket.id;
-      console.log(this.users)
+      //console.log(`eer`,this.users["Ezequiel"])
       console.log(`account_id ${accountId} registrado com socket ID ${socket.id}`);
     })
 
-    socket.on("sendMessage", (payload) => {
-      this.io.to(payload.socket.id).emit("message-received", payload.message)
+    socket.on("send-message", (payload: interfaceProps) => {
+      this.io.to(this.users[payload.recipient]).emit("message-received", {content: payload.message, sender : payload.sender, timestamp: payload.timestamp})
+      console.log(payload)
     } )
-
 
    })
   }
+}
+
+
+type interfaceProps = {
+  recipient : string,
+  sender : string,
+  message : string,
+  timestamp : Date,
 }
