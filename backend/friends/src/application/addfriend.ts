@@ -1,6 +1,6 @@
 
-import { Friend } from "../entity/createFriendship";
 import { FriendsDatabase } from "../database/repository/addFriendRepository";
+import { Friend } from "../entity/createFriendship";
 
 
 

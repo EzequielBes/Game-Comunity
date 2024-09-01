@@ -43,7 +43,19 @@ test("Devo aceitar um pedido de amizade", async () => {
 
 })
 
+test("Tenta adicionar pessoa que ja adicinou", async () => {
+
+  const input = {
+    me: "1",
+    friend: "2"
+  }
+  const database = new PostgresDatabaseConnection()
+  const friendRepository = new FriendsDatabaseRepository(database)
+  const makeFriend = await Friend.sendfriendRequest(input.me, input.friend)
+  const createFriendRequest = await friendRepository.createfriend(makeFriend);
+
+  const searchForFriendInDatabase = await friendRepository.findFriendship(input.me, input.friend);
+  expect(searchForFriendInDatabase).toBeDefined()
 
 
-
-
+})

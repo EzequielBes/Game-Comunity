@@ -1,14 +1,14 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { signinUser } from "@/api/users";
+import { InputComp } from "@/components/inputcomponent";
+import { decodeJwtToken } from "@/jwt/decode";
 import { Button } from "@chakra-ui/button";
 import { FormControl } from "@chakra-ui/form-control";
 import { Box, Flex, Text } from "@chakra-ui/layout";
-import { useEffect, useState } from "react";
 import { keyframes } from "@emotion/react";
-import { useForm, Controller } from "react-hook-form";
-import { InputComp } from "@/components/inputcomponent";
-import { signinUser } from "@/api/users";
-import { decodeJwtToken } from "@/jwt/decode";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 // Animação de abertura de tela
 const openingAnimation = keyframes`
@@ -40,7 +40,7 @@ export default function LoginPage() {
     if(signin.output.erro) return setErrorMessage(signin.output.erro);
     const decoded:any = decodeJwtToken(signin.output)
     localStorage.setItem("account_id", decoded['account_id'])
-    localStorage.setItem("email", decoded['username'])
+    localStorage.setItem("username", decoded['username'])
 
     router.push("/chat/private")
   };

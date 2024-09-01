@@ -15,6 +15,8 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { getAllfriends, getPendentRequest, addfriends } from '@/api/friends';
+import { PrivateChat } from '@/components/chatcomponent';
+import { ContactComponent } from '@/components/contantscomponent';
 
 const socket = io('http://localhost:3005');
 
@@ -108,124 +110,32 @@ const Chat: React.FC = () => {
       console.error('User is not logged in');
     }
   };
+  const [selectedContact, setSelectedContact] = useState<{ username: string; userid: string } | null>(null);
+
+  const handleContactClick = (contact: { username: string; userid: string }) => {
+    setSelectedContact(contact);
+    console.log("Contato selecionado:", contact);
+    // Aqui você pode fazer outras ações com os dados do contato
+  };
 
   return (
     <Flex direction="row" h="100vh" p={4} bg="gray.100">
-      <Flex direction="column" w="300px" bg="white" borderRadius="md" boxShadow="md" mr={4}>
-        <Box p={4} borderBottom="1px" borderColor="gray.200" bg="blue.500" color="white">
-          <HStack justify="space-between">
-            <Text fontWeight="bold">Contacts</Text>
-            <IconButton
-              aria-label="Add contact"
-              colorScheme="teal"
-              variant="ghost"
-              onClick={handleAddContact}
-            />
-          </HStack>
-        </Box>
-        <Box p={4} borderBottom="1px" borderColor="gray.200">
-          <HStack>
-            <Input
-              value={newContact}
-              onChange={(e) => setNewContact(e.target.value)}
-              placeholder="Add friend by username..."
-              borderRadius="full"
-              bg="white"
-              boxShadow="sm"
-            />
-            <Button
-              onClick={handleAddContact}
-              colorScheme="blue"
-              borderRadius="full"
-              px={4}
-            >
-              Add
-            </Button>
-          </HStack>
-        </Box>
-        <Box p={4} borderBottom="1px" borderColor="gray.200" bg="blue.50" color="black">
-          <Text fontWeight="bold" mb={2}>Pending Friend Requests</Text>
-          <List spacing={3}>
-            {pendingRequests.length > 0 ? (
-              pendingRequests.map((request, index) => (
-                <ListItem key={index} p={2} borderRadius="md" _hover={{ bg: "gray.100" }} cursor="pointer">
-                  <HStack>
-                    <Avatar size="sm" name={request.username.value} src={`https://bit.ly/dan-abramov?index=${index}`} />
-                    <Text color="black">{request.username.value}</Text>
-                  </HStack>
-                </ListItem>
-              ))
-            ) : (
-              <Text>No pending requests</Text>
-            )}
-          </List>
-        </Box>
-        <Box p={4}>
-          <Text fontWeight="bold" mb={2}>Contacts</Text>
-          <List spacing={3}>
-            {contacts.length > 0 ? (
-              contacts.map((contact, index) => (
-                <ListItem key={index} p={2} borderRadius="md" _hover={{ bg: "gray.100" }} cursor="pointer">
-                  <HStack>
-                    <Avatar size="sm" name={contact.username} src={`https://bit.ly/dan-abramov?index=${index}`} />
-                    <Text>{contact.username}</Text>
-                  </HStack>
-                </ListItem>
-              ))
-            ) : (
-              <Text>No contacts found</Text>
-            )}
-          </List>
-        </Box>
+      <Flex flex={1}>
+      <ContactComponent onContactClick={handleContactClick}/>
+      </Flex>
+      <Flex flex={2}>
+      <PrivateChat destinatario={{
+        username: selectedContact?.username,
+        userid: selectedContact?.userid
+      }} enviador={{
+          username: 'Ezequiel',
+          userid: '223'
+      }} />
+
       </Flex>
 
-      <Flex direction="column" flex="1" bg="white" borderRadius="md" boxShadow="md">
-        <Box p={4} borderBottom="1px" borderColor="gray.200">
-          <HStack>
-            <Avatar name="User" src="https://bit.ly/dan-abramov" />
-            <Text fontWeight="bold">Chat</Text>
-          </HStack>
-        </Box>
-        <Box p={4} flex="1" overflowY="auto">
-          <VStack spacing={4} align="start">
-            {messages.map((message, index) => (
-              <HStack key={index} align="start">
-                <Avatar size="sm" name={`User ${index}`} src={`https://bit.ly/dan-abramov?index=${index}`} />
-                <Box
-                  p={3}
-                  bg="blue.500"
-                  color="white"
-                  borderRadius="md"
-                  maxW="80%"
-                  wordBreak="break-word"
-                >
-                  {message}
-                </Box>
-              </HStack>
-            ))}
-          </VStack>
-        </Box>
-        <Flex mt={4} align="center" p={4} borderTop="1px" borderColor="gray.200">
-          <Input
-            flex="1"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a message..."
-            borderRadius="full"
-            bg="white"
-            boxShadow="sm"
-          />
-          <Button
-            ml={4}
-            onClick={handleSend}
-            colorScheme="blue"
-            borderRadius="full"
-            px={6}
-          >
-            Send
-          </Button>
-        </Flex>
-      </Flex>
+
+
     </Flex>
   );
 };
