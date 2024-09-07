@@ -17,7 +17,6 @@ export class SocketAdapter {
 
     socket.on("registerAccountId", (accountId) => {
       this.users[accountId.trim()] = socket.id;
-      //console.log(`eer`,this.users["Ezequiel"])
       console.log(`account_id ${accountId} registrado com socket ID ${socket.id}`);
     })
 
