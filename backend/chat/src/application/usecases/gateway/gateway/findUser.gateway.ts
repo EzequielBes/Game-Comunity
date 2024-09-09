@@ -4,7 +4,7 @@ import { inject } from "../../../../infra/di/Registry"
 import { UserGateway } from "./user.api"
 
 
-export class User {
+export class Account {
   @inject("userGateway")
   readonly userGateway!: UserGateway
   constructor () {}

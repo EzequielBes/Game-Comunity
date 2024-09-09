@@ -1,4 +1,4 @@
-import { SendMessage } from "../application/send-message";
+import { SendMessage } from "../application/usecases/send-message";
 import { HttpServer } from "../infra/http/httpserver";
 
 
