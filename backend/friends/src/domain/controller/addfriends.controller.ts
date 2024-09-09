@@ -1,6 +1,7 @@
-import { AddFriend } from "../../application/addfriend";
-import { ListFriends } from "../../application/listfriends_usecase";
-import { ListPendent } from "../../application/listPendent_usecase";
+
+import { AddFriend } from "../../application/usecases/addfriend";
+import { ListFriends } from "../../application/usecases/listfriends_usecase";
+import { ListPendent } from "../../application/usecases/listPendent_usecase";
 import { HttpServer } from "../../http/httpserver";
 
 

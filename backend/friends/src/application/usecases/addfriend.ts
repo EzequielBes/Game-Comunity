@@ -1,13 +1,14 @@
 
-import { FriendsDatabase } from "../database/repository/addFriendRepository";
-import { Friend } from "../entity/createFriendship";
+import { FriendsDatabaseRepository } from "../../database/repository/addFriendRepository";
+import { Friend } from "../../entity/createFriendship";
+
 
 
 
 export class AddFriend {
 
   constructor (
-    readonly databaseConnection : FriendsDatabase
+    readonly databaseConnection : FriendsDatabaseRepository
   ) {}
 
   async execute (input:friend) {

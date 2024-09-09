@@ -1,7 +1,7 @@
 import { DatabaseConnection } from "../databaseConnection/database";
 
 
-export interface FriendsDatabase {
+export interface FriendsRepository {
   findFriendship(me:string, friend: string):Promise<any>;
   createfriend(friend: Friend):Promise<void>;
   updatefriend(friend: string, me : string) : Promise<void>
@@ -12,7 +12,7 @@ export interface FriendsDatabase {
 }
 
 
-export class FriendsDatabaseRepository implements FriendsDatabase {
+export class FriendsDatabaseRepository implements FriendsRepository {
 
   constructor(
     readonly databaseConnection : DatabaseConnection

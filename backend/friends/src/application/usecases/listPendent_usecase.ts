@@ -1,7 +1,7 @@
-import { FriendsDatabase } from "../database/repository/addFriendRepository";
+import { FriendsDatabaseRepository } from "../../database/repository/addFriendRepository";
 
 export class ListPendent {
-  constructor(readonly connectionDatabase: FriendsDatabase) {}
+  constructor(readonly connectionDatabase: FriendsDatabaseRepository) {}
 
   async execute(account_id: string) {
     console.log(account_id)
