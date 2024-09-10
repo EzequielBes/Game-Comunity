@@ -13,6 +13,10 @@ const Message = new mongoose.Schema({
     type : String,
     require: true
   },
+  message_content : {
+    type: String,
+    require: true,
+  },
   date : {
     type : Date,
     require : true

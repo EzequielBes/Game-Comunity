@@ -1,3 +1,4 @@
+import { ReceivedMessage } from "./application/usecases/receive-message";
 import { SendMessage } from "./application/usecases/send-message";
 import { MessageController } from "./domain/Message.controller";
 import { connectionMongoDb } from "./infra/database/connection";
@@ -13,11 +14,13 @@ const socket = new SocketAdapter()
 socket.start(server.http)
 
 
-const database = new connectionMongoDb("http://localhost:27017/messages", "message")
+const database = new connectionMongoDb("mongodb://localhost:27017/", "messages");
+
 Registry.getInstance().provide("databaseRepository", database)
 const messageDatabase = new MessageRepositoryDatabase()
 const sendMessageUseCase = new SendMessage(messageDatabase)
-const messagesController = new MessageController(server, sendMessageUseCase)
+const receiveMessage = new ReceivedMessage(messageDatabase)
+new MessageController(server, sendMessageUseCase, receiveMessage)
 
 server.http.listen(3005, () => {
   console.log("O servidor esta correndo na porta 3005")

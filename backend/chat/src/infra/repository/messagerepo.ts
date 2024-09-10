@@ -5,7 +5,7 @@ import { inject } from "../di/Registry";
 
 export interface MessageRepository {
   saveMessage(content: InputSendMessage): Promise<void>;
-  deleteMessage(): Promise<void>;
+  getMessages(person1:string, person2:string): Promise<void>;
 }
 
 export class MessageRepositoryDatabase implements MessageRepository {
@@ -17,17 +17,26 @@ export class MessageRepositoryDatabase implements MessageRepository {
 
   async saveMessage(message: any): Promise<void> {
     const collection = await this.databaseRepository.getColletion('message')
+    console.log(`collection`)
     await collection.insertOne({
-      messageId: message.messageId,
-			senderUsername :message.senderUsername,
-			recipientUsername: message.recipientUsername,
-			messageContent: message.messageContent,
+      message_id: message.messageId,
+			sender_username :message.senderUsername,
+			recipient_username: message.recipientUsername,
+			message_content: message.messageContent,
 			date: message.date
     })
   }
 
-  deleteMessage(): Promise<void> {
-    throw new Error("Method not implemented.");
+  async getMessages(person1: string, person2: string): Promise<any> {
+    const collection = await this.databaseRepository.getColletion("message");
+
+    const messages = await collection.find({
+      $or: [
+        { sender: person1, recipient: person2 },
+        { sender: person2, recipient: person1 }
+      ]
+    }).toArray();
+    return messages
   }
 
 }

@@ -1,15 +1,25 @@
-import axios from "axios"
-import { UserDto } from "../../../../domain/Dto/userDto"
+import axios from "axios";
+import { UserDto } from "../../../../domain/Dto/userDto";
 
 export interface UserGateway {
-  getUser(name:string):Promise<UserDto | null>
+  getUser(name:string):Promise<UserDto | undefined>
 }
 
 export class AxiosUserGateway implements UserGateway {
-  private constructor () {}
+   constructor () {}
 
-  async getUser(name: string): Promise<UserDto | null> {
-     return axios.get("http://localhost:3002/getuser?name="+name).then(response => (response.data))
+  async getUser(name: string): Promise<UserDto | undefined> {
+    console.log(name)
+    try {
+      const response = await axios.get(`http://localhost:3002/getUser`, {
+        params: { username: name }
+      });
+      return response.data.output;
+    } catch (error) {
+
+      return ;
+    }
   }
+
 
 }

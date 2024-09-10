@@ -1,16 +1,15 @@
 
-import { UserDto } from "../../../../domain/Dto/userDto"
-import { inject } from "../../../../infra/di/Registry"
-import { UserGateway } from "./user.api"
+import { UserDto } from "../../../../domain/Dto/userDto";
+import { AxiosUserGateway } from "./user.api";
 
 
 export class Account {
-  @inject("userGateway")
-  readonly userGateway!: UserGateway
+
   constructor () {}
 
-  async findUser (name:string): Promise<UserDto | null> {
-      const output = await this.userGateway.getUser(name)
+  async findUser (name:string): Promise<UserDto | undefined> {
+      const output = await new AxiosUserGateway().getUser(name)
+      if (!output) return;
       return output
   }
 }

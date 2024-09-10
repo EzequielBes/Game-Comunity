@@ -1,4 +1,3 @@
-import { User } from "../../../application/signup_usecase";
 import { Account } from "../../../domain/entity/save_user";
 import { DatabaseConnection } from "../databaseConnection/database";
 
@@ -8,6 +7,7 @@ export interface UserRepository {
   saveAccount(account: Account):Promise<void>;
   delete(email: string): Promise<void>;
   getById(account_id:string): Promise<Account | undefined>;
+  getByName(username:string): Promise<Account | undefined>;
 
 }
 
@@ -15,6 +15,11 @@ export interface UserRepository {
 export class UserRepositoryDatabase implements UserRepository{
 
   constructor (readonly databaseConnection: DatabaseConnection) {}
+    async getByName(username: string): Promise<Account | undefined> {
+      const [accountData] = await this.databaseConnection.query('SELECT * FROM "user_table" WHERE username = $1  ', [username])
+      if(!accountData) return
+      return Account.restore(accountData.account_id, accountData.name, accountData.username, accountData.email, accountData.password)
+    }
 
   async getById(account_id: string) {
     const [accountData] = await this.databaseConnection.query('SELECT * FROM "user_table" WHERE account_id = $1', [account_id]);

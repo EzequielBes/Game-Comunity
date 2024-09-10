@@ -1,11 +1,12 @@
-import { AddFriend } from "./application/addfriend";
 import { FriendsController } from "./domain/controller/addfriends.controller";
 
-import { ExpressHttpServer } from "./http/httpserver";
-import { ListFriends } from "./application/listfriends_usecase";
+import { AddFriend } from "./application/usecases/addfriend";
+import { ListPendent } from "./application/usecases/listPendent_usecase";
+import { ListFriends } from "./application/usecases/listfriends_usecase";
 import { PostgresDatabaseConnection } from "./database/databaseConnection/database";
 import { FriendsDatabaseRepository } from "./database/repository/addFriendRepository";
-import { ListPendent } from "./application/listPendent_usecase";
+import { ExpressHttpServer } from "./http/httpserver";
+
 
 
 const httpServer = new ExpressHttpServer()

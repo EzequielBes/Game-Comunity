@@ -1,4 +1,5 @@
 import socket from "@/domain/socket";
+import { sendMessages } from "@/gateway/messages";
 import { Box, Button, Flex, Icon, Input, Text } from "@chakra-ui/react";
 import { User } from "phosphor-react";
 import { useEffect, useState } from "react";
@@ -22,12 +23,14 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
   const [messages, setMessages] = useState<{ [key: string]: Message[] }>({});
   const [newMessage, setNewMessage] = useState("");
 
-  const handleSubmitMessage = () => {
+  const handleSubmitMessage = async () => {
+
     if (newMessage.trim() !== "") {
       const updatedMessages = [
         ...(messages[destinatario.friend || ""] || []),
         { text: newMessage, sender: "me", timestamp: new Date().toLocaleTimeString() },
       ];
+      if (!destinatario.friend) return;
       setMessages({
         ...messages,
         [destinatario.friend || ""]: updatedMessages,
@@ -39,6 +42,12 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
         message: newMessage,
         timestamp: new Date().toLocaleTimeString(),
       });
+
+       const sendMessage = await sendMessages(
+          enviador.sender,
+          destinatario.friend,
+          newMessage,
+       )
     }
   };
 
