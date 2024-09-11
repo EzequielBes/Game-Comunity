@@ -1,5 +1,5 @@
 # Meu objetivo com game comunity é me desafiar e implementar boas praticas de desenvolvimento
-## Nesse projeto esta sendo utilizado conceitos como - Arquitetura Hexagonal, SOLID, TDD, DDD alem de micro-services
+### Nesse projeto esta sendo utilizado conceitos como - Arquitetura Hexagonal, SOLID, TDD, DDD alem de micro-services
 ### Tecnoligias utilizadas, Typescript, Nodejs algumas libs como Express, Socket.io, Rabbit.MQ, Banco de dados usados SQL -> Postgresql. NOSQL -> MongoDB.
 
 
