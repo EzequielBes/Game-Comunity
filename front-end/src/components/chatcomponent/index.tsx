@@ -1,6 +1,6 @@
 import socket from "@/domain/socket";
 import { getMessages, sendMessages } from "@/gateway/messages";
-import { Box, Button, Flex, Icon, Input, Text, Badge } from "@chakra-ui/react";
+import { Badge, Box, Button, Flex, Icon, Input, Text } from "@chakra-ui/react";
 import { User } from "phosphor-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -115,8 +115,8 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
   const currentMessages = messages[destinatario.friend || ""] || [];
 
   return (
-    <Box bg="gray.900" w="100%" h="100vh" p={4}>
-      <Flex bg="gray.800" p={4} alignItems="center">
+    <Flex bg="#1B202B" w="100%" maxH="100vh" flexDir={"column"} p={4}>
+      <Flex bg="gray.800" p={4} >
         <Icon as={User} boxSize={8} color="purple.400" />
         <Text ml={2} color="white" fontWeight="bold" fontSize="lg">
           {destinatario.friend}
@@ -157,7 +157,7 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
         ))}
       </Box>
 
-      <Flex mt={4} as="form" onSubmit={(e) => { e.preventDefault(); handleSubmitMessage(); }}>
+      <Flex bottom={10} mt={4} as="form" onSubmit={(e) => { e.preventDefault(); handleSubmitMessage(); }}  >
         <Input
           placeholder="Digite sua mensagem..."
           value={newMessage}
@@ -168,11 +168,13 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
           _placeholder={{ color: "gray.400" }}
           borderRadius="md"
           mr={2}
+
+
         />
         <Button type="submit" colorScheme="purple">
           Enviar
         </Button>
       </Flex>
-    </Box>
+    </Flex>
   );
 }

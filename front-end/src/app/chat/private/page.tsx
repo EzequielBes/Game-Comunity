@@ -95,7 +95,7 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <Flex direction="row" h="100vh" p={4} bg="gray.100">
+    <Flex direction="row" h="100vh" p={4} bg="gray.800">
       <Flex flex={1}>
       <ContactComponent onContactClick={handleContactClick}/>
       </Flex>

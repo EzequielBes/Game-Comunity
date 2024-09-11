@@ -24,6 +24,8 @@
     "react-dom": "^18",
     "react-hook-form": "^7.52.2",
     "socket.io-client": "^4.7.5",
+    "three": "^0.168.0",
+    "threejs-toys": "^0.0.8",
     "zod": "^3.23.8"
   },
   "devDependencies": {

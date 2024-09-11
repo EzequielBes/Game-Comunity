@@ -6,7 +6,7 @@ export const InputComp = ({ type, place, ...props }: InputProps) => {
     <Input
       type={type}
       placeholder={place}
-      bg={"rgba(255, 255, 255, 0.1)"}
+      bg={"rgba(000, 000, 000, 0.4)"}
       boxShadow={"1px 1px 11px -3px rgba(19, 19, 22, 0.8)"}
       border={"none"}
       _focus={{

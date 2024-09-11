@@ -70,7 +70,7 @@ export function ContactComponent({ onContactClick }: ContactComponentProps) {
   };
 
   return (
-    <Box bg="gray.900" w="100%" h="100vh" p={4}>
+    <Box bg="#1A213C" w="100%" h="100vh" p={4}>
       <Flex bg="gray.800" p={4} alignItems="center" justify="space-between">
         <Flex alignItems="center">
           <Icon as={User} boxSize={8} color="purple.400" />
