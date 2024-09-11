@@ -12,6 +12,7 @@ O objetivo principal deste projeto é implementar boas práticas de desenvolvime
   - Express
   - Socket.io
   - RabbitMQ
+  - E mais
 - **Bancos de Dados:**
   - SQL: PostgreSQL
   - NoSQL: MongoDB
