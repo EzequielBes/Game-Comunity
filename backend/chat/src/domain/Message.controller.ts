@@ -15,8 +15,8 @@ export class MessageController {
       const output = await sendMessage.execute(body);
       return output
     })
-    this.httpServer.register("get", "/receive-message", async (body:any, params:any) => {
-      const output = await receiveMessage.execute(params);
+    this.httpServer.register("post", "/getmessages", async (body:any, params:any) => {
+      const output = await receiveMessage.execute(body);
       return output
     })
   }

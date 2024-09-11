@@ -21,6 +21,7 @@ export class Messager {
   }
 
   static restore (messageId: string, senderUsername: string, recipientUsername: string, messageContent: string, date: Date) {
+    console.log(messageId, senderUsername, recipientUsername, messageContent, date)
     return new Messager(messageId, senderUsername, recipientUsername, messageContent, date)
   }
 

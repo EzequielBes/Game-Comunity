@@ -7,8 +7,13 @@ export class ReceivedMessage {
   constructor (readonly messageDatabase: MessageRepositoryDatabase) {}
 
   async execute (input:any) {
-    const getMessages = await this.messageDatabase.getMessages(input.person1, input.person2)
-    const msg = Messager.restore(getMessages.messageId,getMessages.senderUsername, getMessages.recipientUsername, getMessages.messageContent, getMessages.date )
-    return msg
+    console.log(input)
+    const getMessages = await this.messageDatabase.getMessages(input.user1, input.user2)
+    let messages = []
+    for(let i in getMessages) {
+      messages.push(Messager.restore(getMessages[i].message_id, getMessages[i].sender_username, getMessages[i].recipient_username, getMessages[i].message_content, getMessages[i].date))
+    }
+
+    return messages
   }
 }

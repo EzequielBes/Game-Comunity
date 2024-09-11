@@ -1,8 +1,8 @@
 import socket from "@/domain/socket";
-import { sendMessages } from "@/gateway/messages";
-import { Box, Button, Flex, Icon, Input, Text } from "@chakra-ui/react";
+import { getMessages, sendMessages } from "@/gateway/messages";
+import { Box, Button, Flex, Icon, Input, Text, Badge } from "@chakra-ui/react";
 import { User } from "phosphor-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Message = {
   text: string;
@@ -22,15 +22,19 @@ type ChatProps = {
 export function PrivateChat({ destinatario, enviador }: ChatProps) {
   const [messages, setMessages] = useState<{ [key: string]: Message[] }>({});
   const [newMessage, setNewMessage] = useState("");
+  const [unreadMessages, setUnreadMessages] = useState<{ [key: string]: number }>({});
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const hasFetchedMessages = useRef(false);
 
   const handleSubmitMessage = async () => {
-
     if (newMessage.trim() !== "") {
       const updatedMessages = [
         ...(messages[destinatario.friend || ""] || []),
         { text: newMessage, sender: "me", timestamp: new Date().toLocaleTimeString() },
       ];
+
       if (!destinatario.friend) return;
+
       setMessages({
         ...messages,
         [destinatario.friend || ""]: updatedMessages,
@@ -43,25 +47,53 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
         timestamp: new Date().toLocaleTimeString(),
       });
 
-       const sendMessage = await sendMessages(
-          enviador.sender,
-          destinatario.friend,
-          newMessage,
-       )
+      await sendMessages(enviador.sender, destinatario.friend, newMessage);
+    }
+  };
+
+  const getOldMessagesFromChat = async () => {
+    if (!destinatario.friend || hasFetchedMessages.current) return;
+
+    hasFetchedMessages.current = true;
+    const oldMessages = await getMessages(enviador.sender, destinatario.friend);
+
+    const formattedMessages = oldMessages.map((msg: any) => ({
+      text: msg.messageContent,
+      sender: msg.senderUsername === enviador.sender ? "me" : "them",
+      timestamp: new Date(msg.date).toLocaleTimeString(),
+    }));
+
+    setMessages((prevMessages) => ({
+      ...prevMessages,
+      [destinatario.friend as string]: formattedMessages,
+    }));
+  };
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   };
 
   useEffect(() => {
     const handleReceiveMessage = (data: any) => {
       if (data.sender === destinatario.friend) {
-        const updatedMessages = [
-          ...(messages[data.sender] || []),
-          { text: data.content, sender: "them", timestamp: data.timestamp },
-        ];
-        setMessages({
-          ...messages,
-          [data.sender]: updatedMessages,
+        setMessages((prevMessages) => {
+          const updatedMessages = [
+            ...(prevMessages[data.sender] || []),
+            { text: data.content, sender: "them", timestamp: data.timestamp },
+          ];
+
+          return {
+            ...prevMessages,
+            [data.sender]: updatedMessages,
+          };
         });
+      } else {
+        setUnreadMessages((prev) => ({
+          ...prev,
+          [data.sender]: (prev[data.sender] || 0) + 1,
+        }));
       }
     };
 
@@ -70,7 +102,15 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
     return () => {
       socket.off("message-received", handleReceiveMessage);
     };
-  }, [messages, destinatario.friend]);
+  }, [destinatario.friend]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  useEffect(() => {
+    getOldMessagesFromChat();
+  }, [destinatario.friend]);
 
   const currentMessages = messages[destinatario.friend || ""] || [];
 
@@ -81,6 +121,11 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
         <Text ml={2} color="white" fontWeight="bold" fontSize="lg">
           {destinatario.friend}
         </Text>
+        {unreadMessages[destinatario.friend || ""] > 0 && (
+          <Badge ml={2} colorScheme="red">
+            {unreadMessages[destinatario.friend || ""]} novas
+          </Badge>
+        )}
       </Flex>
 
       <Box
@@ -90,6 +135,8 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
         borderRadius="md"
         p={4}
         overflowY="auto"
+        ref={chatContainerRef}
+        maxH="70vh"
       >
         {currentMessages.map((message, index) => (
           <Flex

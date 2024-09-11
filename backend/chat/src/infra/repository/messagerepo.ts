@@ -32,11 +32,12 @@ export class MessageRepositoryDatabase implements MessageRepository {
 
     const messages = await collection.find({
       $or: [
-        { sender: person1, recipient: person2 },
-        { sender: person2, recipient: person1 }
+        { sender_username: person1, recipient_username: person2 },
+        { sender_username: person2, recipient_username: person1 }
       ]
     }).toArray();
-    return messages
+    return messages;
   }
+
 
 }
