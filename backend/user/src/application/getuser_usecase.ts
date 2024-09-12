@@ -14,7 +14,6 @@ export class GetUser {
     }
     }
     const getUser = await this.databaseConnection.getByName(input.username);
-    console.log(`ss`)
     if(!getUser) throw new Error("User not found")
     return {
       username: getUser.getUsername(),

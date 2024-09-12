@@ -7,7 +7,6 @@ export class Signup {
   constructor (readonly databaseConnection: UserRepository) {}
 
   async execute (input: User) {
-    console.log(input)
     const accountExists = await this.databaseConnection.getByEmail(input.email);
     if(accountExists) throw new Error("Account already exists");
     const account = Account.create(input.name, input.username, input.email, input.password);

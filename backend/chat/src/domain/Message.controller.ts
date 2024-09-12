@@ -11,7 +11,6 @@ export class MessageController {
     readonly receiveMessage : ReceivedMessage
   ) {
     this.httpServer.register("post", "/send-message", async (body:any, params:string) => {
-      console.log(`ss`)
       const output = await sendMessage.execute(body);
       return output
     })

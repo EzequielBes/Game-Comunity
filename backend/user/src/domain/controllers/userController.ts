@@ -21,7 +21,6 @@ export class UserController {
     })
 
     httpServer.register("get", "/getUser", async (body:any, params:any) => {
-      console.log(params)
       const output = await getUser.execute(params);
       return output
     })

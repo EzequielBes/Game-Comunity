@@ -22,7 +22,6 @@ export class SocketAdapter {
 
     socket.on("send-message", (payload: interfaceProps) => {
       this.io.to(this.users[payload.recipient]).emit("message-received", {content: payload.message, sender : payload.sender, timestamp: payload.timestamp})
-      console.log(payload)
     } )
 
    })

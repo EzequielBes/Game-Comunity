@@ -7,7 +7,6 @@ export class ReceivedMessage {
   constructor (readonly messageDatabase: MessageRepositoryDatabase) {}
 
   async execute (input:any) {
-    console.log(input)
     const getMessages = await this.messageDatabase.getMessages(input.user1, input.user2)
     let messages = []
     for(let i in getMessages) {

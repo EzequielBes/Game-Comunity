@@ -15,6 +15,6 @@ const server = new ExpressHttpServer()
 const userSignup = new Signup(databaseRepository)
 const userSignin = new Signin(databaseRepository)
 const getUser = new GetUser(databaseRepository)
-const userController = new UserController(server, userSignup, userSignin, getUser)
+new UserController(server, userSignup, userSignin, getUser)
 
 server.listen("3002")

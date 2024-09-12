@@ -17,7 +17,6 @@ export class MessageRepositoryDatabase implements MessageRepository {
 
   async saveMessage(message: any): Promise<void> {
     const collection = await this.databaseRepository.getColletion('message')
-    console.log(`collection`)
     await collection.insertOne({
       message_id: message.messageId,
 			sender_username :message.senderUsername,
@@ -29,7 +28,6 @@ export class MessageRepositoryDatabase implements MessageRepository {
 
   async getMessages(person1: string, person2: string): Promise<any> {
     const collection = await this.databaseRepository.getColletion("message");
-
     const messages = await collection.find({
       $or: [
         { sender_username: person1, recipient_username: person2 },

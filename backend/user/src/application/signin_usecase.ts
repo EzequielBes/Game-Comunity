@@ -6,7 +6,7 @@ import { UserRepositoryDatabase } from './../infra/database/repository/userRepos
 export class Signin {
 constructor (readonly connectionDatabase: UserRepositoryDatabase) {}
 
-  async execute(input: SigninDto) {
+  async execute(input: SigninProps) {
       const account = await this.connectionDatabase.getByEmail(input.email)
       if(!account) throw new Error("Account not exists");
       const databasePassword = account.password.getValue();
@@ -16,7 +16,7 @@ constructor (readonly connectionDatabase: UserRepositoryDatabase) {}
   }
 }
 
-export interface SigninDto {
+export interface SigninProps {
   email: string,
   password: string
 }

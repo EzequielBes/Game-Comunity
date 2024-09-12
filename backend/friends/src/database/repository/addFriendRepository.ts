@@ -21,7 +21,6 @@ export class FriendsDatabaseRepository implements FriendsRepository {
   async pendentRequests(userId: string): Promise<any> {
 
     const pendentRequest = await this.databaseConnection.query('SELECT * FROM "friendships" WHERE friend = $1 AND status = $2', [userId, 'pending'])
-    console.log(pendentRequest)
     if(!pendentRequest) return
     return pendentRequest
   }

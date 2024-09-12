@@ -35,14 +35,9 @@ export class Account {
   }
  async getPassword() {
     const crypt = CryptoPassword.encrypt(this.password.getValue())
-    console.log(crypt)
     return await crypt
   }
   getName() {
     return this.name.getValue()
   }
 }
-
-
-
-
