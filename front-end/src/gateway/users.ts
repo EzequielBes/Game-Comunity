@@ -1,7 +1,7 @@
 import axios from "axios"
 
 
-export const signupUser = async ( name, username, email, password ) => {
+export const signupUser = async ( name:string, username:string, email:string, password:string ) => {
   try {
     const response = await axios.post('http://localhost:3002/signup', {
       name,
@@ -15,7 +15,7 @@ export const signupUser = async ( name, username, email, password ) => {
   }
 };
 
-export const signinUser = async ( email, password ) => {
+export const signinUser = async ( email: string, password:string ) => {
   try {
     const response = await axios.post('http://localhost:3002/signin', {
       email,

@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-// Animação de abertura de tela
 const openingAnimation = keyframes`
   0% { transform: scale(1); opacity: 0; }
   50% { transform: scale(1.1); opacity: 0.5; }
@@ -31,7 +30,7 @@ export default function LoginPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1500); // Duração do efeito de abertura
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
 

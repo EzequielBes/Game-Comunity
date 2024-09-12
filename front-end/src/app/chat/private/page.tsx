@@ -48,9 +48,9 @@ const Chat: React.FC = () => {
       const fetchPendingRequests = async () => {
         try {
           const requests = await getPendentRequest(accountId);
-          console.log('Pending Requests Data:', requests); // Log para verificar a resposta da API
+          console.log('Pending Requests Data:', requests);
 
-          // Verificando se requests é um array
+
           if (Array.isArray(requests)) {
             setPendingRequests(requests);
           } else {
@@ -91,11 +91,10 @@ const Chat: React.FC = () => {
   const handleContactClick = (contact: { friend: string; me: string }) => {
     setSelectedContact(contact);
     console.log("Contato selecionado:", contact);
-    // Aqui você pode fazer outras ações com os dados do contato
   };
 
   return (
-    <Flex direction="row" h="100vh" p={4} bg="gray.800">
+    <Flex direction="row" minH="100vh" p={4} bg="gray.800" overflowY={"hidden"}>
       <Flex flex={1}>
       <ContactComponent onContactClick={handleContactClick}/>
       </Flex>

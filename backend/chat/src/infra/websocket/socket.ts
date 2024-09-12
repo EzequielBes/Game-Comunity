@@ -23,6 +23,22 @@ export class SocketAdapter {
     socket.on("send-message", (payload: interfaceProps) => {
       this.io.to(this.users[payload.recipient]).emit("message-received", {content: payload.message, sender : payload.sender, timestamp: payload.timestamp})
     } )
+    socket.on("online", (payload: any) => {
+
+      if (payload && Array.isArray(payload.friends)) {
+
+        payload.friends.forEach((friendship: any) => {
+
+          if (this.users[friendship.friend]) {
+            console.log(friendship.friend)
+
+            this.io.to(this.users[friendship.friend]).emit("friendonly",  `${friendship.me} está online` );
+          }
+        });
+
+
+      }
+    });
 
    })
   }

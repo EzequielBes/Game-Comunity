@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UserDto } from "../../../../domain/Dto/userDto";
+import { UserDto } from "../../../domain/Dto/userDto";
 
 export interface UserGateway {
   getUser(name:string):Promise<UserDto | undefined>

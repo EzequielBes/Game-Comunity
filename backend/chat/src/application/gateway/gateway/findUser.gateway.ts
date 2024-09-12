@@ -1,5 +1,5 @@
 
-import { UserDto } from "../../../../domain/Dto/userDto";
+import { UserDto } from "../../../domain/Dto/userDto";
 import { AxiosUserGateway } from "./user.api";
 
 

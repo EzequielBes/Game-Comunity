@@ -115,7 +115,7 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
   const currentMessages = messages[destinatario.friend || ""] || [];
 
   return (
-    <Flex bg="#1B202B" w="100%" maxH="100vh" flexDir={"column"} p={4}>
+    <Flex bg="#1B202B" w="100%" maxH="100vh" flexDir={"column"} p={4} overflowY={"hidden"}>
       <Flex bg="gray.800" p={4} >
         <Icon as={User} boxSize={8} color="purple.400" />
         <Text ml={2} color="white" fontWeight="bold" fontSize="lg">

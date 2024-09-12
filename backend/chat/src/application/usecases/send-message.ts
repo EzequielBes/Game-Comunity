@@ -1,6 +1,6 @@
 import { Messager } from "../../domain/entity/message";
 import { MessageRepositoryDatabase } from "../../infra/repository/messagerepo";
-import { Account } from "./gateway/gateway/findUser.gateway";
+import { Account } from "../gateway/gateway/findUser.gateway";
 
 
 export class SendMessage {

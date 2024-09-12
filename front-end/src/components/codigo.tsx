@@ -1,21 +1,20 @@
 "use client"
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
-import {
-  Box,
-  Flex,
-  Input,
-  Button,
-  Text,
-  VStack,
-  HStack,
-  Avatar,
-  List,
-  ListItem,
-  IconButton,
-} from '@chakra-ui/react';
-import { getAllfriends, getPendentRequest, addfriends } from '@/api/friends';
+import { addfriends, getAllfriends, getPendentRequest } from '@/api/friends';
 import { PrivateChat } from '@/components/chatcomponent';
+import {
+    Avatar,
+    Box,
+    Button,
+    Flex,
+    HStack,
+    IconButton,
+    Input,
+    List,
+    ListItem,
+    Text
+} from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import io from 'socket.io-client';
 
 const socket = io('http://localhost:3005');
 
@@ -111,7 +110,7 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <Flex direction="row" h="100vh" p={4} bg="gray.100">
+    <Flex direction="row" h="100vh" p={4} bg="gray.100" overflowY={"hidden"}>
       <Flex direction="column" w="300px" bg="white" borderRadius="md" boxShadow="md" mr={4}>
         <Box p={4} borderBottom="1px" borderColor="gray.200" bg="blue.500" color="white">
           <HStack justify="space-between">

@@ -1,7 +1,8 @@
 "use client";
 
+import socket from "@/domain/socket";
 import { addfriends, getAllfriends, getPendentRequest } from "@/gateway/friends";
-import { Box, Button, Flex, Icon, Input, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Icon, Input, Text, useToast, VStack } from "@chakra-ui/react";
 import { CheckCircle, User, UserPlus, Users, XCircle } from "phosphor-react";
 import { useEffect, useState } from "react";
 
@@ -21,10 +22,12 @@ export function ContactComponent({ onContactClick }: ContactComponentProps) {
   const [friends, setFriends] = useState<FriendRequest[]>([]);
   const [newRequest, setNewRequest] = useState("");
   const [activeSection, setActiveSection] = useState<"friends" | "addFriend" | "pendingRequests">("friends");
+  const [online, setOnline] = useState(false)
+  const toast = useToast();
 
   useEffect(() => {
     const storedAccount = localStorage.getItem("username");
-    if(!storedAccount) return
+    if (!storedAccount) return;
     setAccount(storedAccount);
   }, []);
 
@@ -42,10 +45,7 @@ export function ContactComponent({ onContactClick }: ContactComponentProps) {
 
   const listPendentRequest = async (userId: string): Promise<void> => {
     const list: any = await getPendentRequest(userId);
-    for(let i in list) {
-      console.log(list[i])
-    }
-    if(!list) return
+    if (!list) return;
     setPendingRequests(list);
   };
 
@@ -53,24 +53,41 @@ export function ContactComponent({ onContactClick }: ContactComponentProps) {
     if (!account || !newRequest) return;
     const newfriend = await addfriends(account, newRequest);
     console.log(newfriend);
-    // Opcionalmente, você pode atualizar a lista de amigos ou fazer outra ação aqui
+
   };
 
   const handleAcceptRequest = async (friend: string): Promise<void> => {
     if (!account) return;
     const newfriend = await addfriends(account, friend);
     console.log(newfriend);
-    // Atualizar lista de amigos
+
     listFriendsOnLoad(account);
   };
 
   const handleRejectRequest = (userid: string) => {
     console.log(`Pedido de amizade de ${userid} rejeitado`);
-    // Aqui você pode implementar a lógica para remover a solicitação da lista
+
   };
 
+  const handleNotificationFriend = (data: { friend: string }) => {
+    toast({
+      title: `${data}`,
+      status: "info",
+      duration: 2000, // Duração de 2 segundos
+      isClosable: true,
+      position: "top-right",
+    });
+    setOnline(true)
+  };
+
+  useEffect(() => {
+      socket.emit("online",  {friends} );
+      socket.on("friendonly", handleNotificationFriend);
+
+  }, [friends]);
+
   return (
-    <Box bg="#1A213C" w="100%" h="100vh" p={4}>
+    <Box bg="#1A213C" w="100%" h="100vh" p={4} overflowY={"hidden"}>
       <Flex bg="gray.800" p={4} alignItems="center" justify="space-between">
         <Flex alignItems="center">
           <Icon as={User} boxSize={8} color="purple.400" />
@@ -122,11 +139,15 @@ export function ContactComponent({ onContactClick }: ContactComponentProps) {
                 onClick={() => onContactClick(friend)}
                 cursor="pointer"
               >
-                <Flex align="center">
-                  <Icon as={User} boxSize={6} color="purple.400" />
-                  <Text ml={2} color="white">
-                    {friend.friend}
-                  </Text>
+                <Flex justify={"space-between"}  w={"100%"}>
+                  <Flex align="center">
+                    <Icon as={User} boxSize={6} color="purple.400" />
+                    <Text ml={2} color="white">{friend.friend}</Text>
+                  </Flex>
+
+
+
+                  <Text color={"green.400"}>o</Text>
                 </Flex>
               </Flex>
             ))}
