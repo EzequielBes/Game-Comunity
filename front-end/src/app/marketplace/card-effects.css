@@ -1,0 +1,201 @@
+/* Modern Card Effects */
+.marketplace-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+  position: relative;
+  overflow: hidden;
+}
+
+.marketplace-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Card Sheen Effect */
+.card-sheen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(110deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.marketplace-card:hover .card-sheen {
+  opacity: 1;
+}
+
+/* Image Hover Effect */
+.card-image {
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+}
+
+.marketplace-card:hover .card-image {
+  transform: scale(1.05);
+}
+
+/* Rarity Animations */
+.rarity-common {
+  border-color: #6B7280;
+}
+
+.rarity-uncommon {
+  border-color: #10B981;
+  animation: uncommon-glow 3s infinite alternate;
+}
+
+.rarity-rare {
+  border-color: #3B82F6;
+  animation: rare-glow 2.5s infinite alternate;
+}
+
+.rarity-epic {
+  border-color: #8B5CF6;
+  animation: epic-glow 2s infinite alternate;
+}
+
+.rarity-legendary {
+  border-color: #F59E0B;
+  animation: legendary-glow 1.5s infinite alternate;
+}
+
+@keyframes uncommon-glow {
+  from {
+    box-shadow: 0 0 8px #10B981, 0 0 16px #10B981;
+  }
+  to {
+    box-shadow: 0 0 12px #34D399, 0 0 24px #34D399;
+  }
+}
+
+@keyframes rare-glow {
+  from {
+    box-shadow: 0 0 10px #3B82F6, 0 0 20px #3B82F6;
+  }
+  to {
+    box-shadow: 0 0 15px #60A5FA, 0 0 30px #60A5FA;
+  }
+}
+
+@keyframes epic-glow {
+  from {
+    box-shadow: 0 0 12px #8B5CF6, 0 0 24px #8B5CF6;
+  }
+  to {
+    box-shadow: 0 0 18px #A78BFA, 0 0 36px #A78BFA;
+  }
+}
+
+@keyframes legendary-glow {
+  from {
+    box-shadow: 0 0 15px #F59E0B, 0 0 30px #F59E0B, 0 0 45px #F59E0B;
+  }
+  to {
+    box-shadow: 0 0 20px #FBBF24, 0 0 40px #FBBF24, 0 0 60px #FBBF24;
+  }
+}
+
+/* Button Hover Effects */
+.marketplace-button {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.marketplace-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transition: left 0.6s;
+}
+
+.marketplace-button:hover::before {
+  left: 100%;
+}
+
+/* Search Bar Focus Effect */
+.search-input:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+  border-color: #3B82F6;
+}
+
+/* Loading Animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.loading-pulse {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Smooth Transitions */
+* {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Dark Mode Enhancements */
+@media (prefers-color-scheme: dark) {
+  .card-sheen {
+    background: linear-gradient(110deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 70%);
+  }
+}
+
+/* Responsive Hover Effects */
+@media (hover: hover) {
+  .marketplace-card:hover {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+@media (hover: none) {
+  .marketplace-card:hover {
+    transform: none;
+  }
+}
+
+/* Accessibility Improvements */
+.marketplace-card:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+/* Performance Optimizations */
+.marketplace-card {
+  will-change: transform;
+}
+
+.card-image {
+  will-change: transform;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1F2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3B82F6;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2563EB;
+}

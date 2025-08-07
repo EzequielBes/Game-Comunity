@@ -38,6 +38,18 @@
   --callout-border-rgb: 172, 175, 176;
   --card-rgb: 180, 185, 188;
   --card-border-rgb: 131, 134, 135;
+
+  /* Gamer Cozy Theme */
+  --cozy-background: 240 10% 4%;
+  --cozy-card: 240 10% 9%;
+  --cozy-text: 240 10% 95%;
+  --cozy-text-secondary: 240 5% 65%;
+  --cozy-title: 280 80% 85%;
+  --cozy-primary: 280 90% 65%;
+  --cozy-secondary: 330 85% 60%;
+  --cozy-highlight: 280 100% 75%;
+  --cozy-border: 240 10% 15%;
+  --cozy-input: 240 10% 12%;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -104,4 +116,8 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+.font-cozy {
+  font-family: 'Quicksand', sans-serif;
 }

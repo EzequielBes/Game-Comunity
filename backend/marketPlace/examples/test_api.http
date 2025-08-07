@@ -1,0 +1,81 @@
+### Marketplace API Tests
+
+### 1. Criar um novo anúncio
+POST http://localhost:3004/marketplace/createPost
+Content-Type: application/json
+
+{
+  "title": "iPhone 13 Pro",
+  "description": "iPhone 13 Pro em excelente estado, 128GB, cor azul. Inclui carregador e capa original.",
+  "price": 4500.00,
+  "category": "electronics",
+  "seller_id": "user123",
+  "images": [
+    "https://via.placeholder.com/300x200?text=iPhone+13+Pro",
+    "https://via.placeholder.com/300x200?text=Detalhes"
+  ]
+}
+
+### 2. Criar outro anúncio
+POST http://localhost:3004/marketplace/createPost
+Content-Type: application/json
+
+{
+  "title": "Nike Air Max 270",
+  "description": "Tênis Nike Air Max 270, tamanho 42, cor preta. Usado apenas algumas vezes.",
+  "price": 350.00,
+  "category": "clothing",
+  "seller_id": "user456",
+  "images": [
+    "https://via.placeholder.com/300x200?text=Nike+Air+Max"
+  ]
+}
+
+### 3. Criar anúncio de livro
+POST http://localhost:3004/marketplace/createPost
+Content-Type: application/json
+
+{
+  "title": "Clean Code - Robert C. Martin",
+  "description": "Livro Clean Code em português, excelente estado. Fundamentos essenciais para programadores.",
+  "price": 80.00,
+  "category": "books",
+  "seller_id": "user789",
+  "images": []
+}
+
+### 4. Listar todos os anúncios
+GET http://localhost:3004/marketplace/getPosts
+
+### 5. Listar anúncios com filtros
+GET http://localhost:3004/marketplace/getPosts?category=electronics&minPrice=100&maxPrice=5000&limit=5
+
+### 6. Buscar anúncios por termo
+GET http://localhost:3004/marketplace/getPosts?search=iPhone
+
+### 7. Buscar anúncios por vendedor
+GET http://localhost:3004/marketplace/getPostsBySeller?seller_id=user123
+
+### 8. Buscar categorias válidas
+GET http://localhost:3004/marketplace/getCategories
+
+### 9. Atualizar um anúncio (substitua POST_ID pelo ID real)
+PUT http://localhost:3004/marketplace/updatePost
+Content-Type: application/json
+
+{
+  "post_id": "POST_ID_AQUI",
+  "seller_id": "user123",
+  "title": "iPhone 13 Pro - Novo Preço",
+  "price": 4200.00,
+  "status": "active"
+}
+
+### 10. Deletar um anúncio (substitua POST_ID pelo ID real)
+DELETE http://localhost:3004/marketplace/deletePost
+Content-Type: application/json
+
+{
+  "post_id": "POST_ID_AQUI",
+  "seller_id": "user123"
+}

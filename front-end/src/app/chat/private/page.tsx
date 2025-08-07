@@ -100,9 +100,9 @@ const Chat: React.FC = () => {
       </Flex>
       <Flex flex={2}>
       <PrivateChat destinatario={{
-          friend: selectedContact?.friend,
+          friend: selectedContact?.friend || '',
       }} enviador={{
-         sender: accountId,
+         sender: accountId || '',
       }} />
 
       </Flex>

@@ -1,20 +1,10 @@
 "use client";
-import { InputComp } from "@/components/inputcomponent";
-import { signinUser } from "@/gateway/users";
-import { decodeJwtToken } from "@/jwt/decode";
-import { Button } from "@chakra-ui/button";
-import { FormControl } from "@chakra-ui/form-control";
-import { Box, Flex, Text } from "@chakra-ui/layout";
-import { keyframes } from "@emotion/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
 
-const openingAnimation = keyframes`
-  0% { transform: scale(1); opacity: 0; }
-  50% { transform: scale(1.1); opacity: 0.5; }
-  100% { transform: scale(1); opacity: 1; }
-`;
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Box, Flex, Text, Button, Input, VStack, Heading } from "@chakra-ui/react";
+import { signinUser } from "../../gateway/users";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface FormData {
   email: string;
@@ -22,88 +12,97 @@ interface FormData {
 }
 
 export default function LoginPage() {
-  const [loading, setLoading] = useState(true);
-  const { control, handleSubmit } = useForm<FormData>();
-  const [errorMessage, setErrorMessage] = useState<string>()
-  const router = useRouter()
+  const [formData, setFormData] = useState<FormData>({
+    email: "",
+    password: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const { login } = useAuth();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const onSubmit = async (data: FormData) => {
-    const signin = await signinUser(data.email, data.password)
-    if(signin.output.erro) return setErrorMessage(signin.output.erro);
-    const decoded:any = decodeJwtToken(signin.output)
-    localStorage.setItem("account_id", decoded['account_id'])
-    localStorage.setItem("username", decoded['username'])
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
-    router.push("/chat/private")
+    try {
+      const response = await signinUser(formData.email, formData.password);
+      
+      if (response.output && response.output.token) {
+        login(response.output.token);
+        // O redirecionamento será feito pelo AuthContext
+      } else {
+        setError("Resposta inválida do servidor");
+      }
+    } catch (err: any) {
+      setError(err.message || "Erro ao fazer login");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <Flex
-      h={"100vh"}
-      w={`100vw`}
-      bg={"#1B202B"}
-      justify={`center`}
-      align={`center`}
-      overflow={`hidden`}
-      animation={loading ? `${openingAnimation} 1.5s ease-out` : 'none'}
-    >
-      <Flex
-        flexDir={`column`}
+    <Flex minH="100vh" align="center" justify="center" bg="gray.50">
+      <Box
         p={8}
-        borderRadius={`md`}
-        opacity={loading ? 0 : 1}
-        transition={`opacity 0.5s`}
-        color={`white`}
-        w={{ base: "90%", sm: "80%", md: "60%", lg: "40%" }}
+        maxW="md"
+        w="full"
+        bg="white"
+        rounded="lg"
+        shadow="lg"
       >
-        <Box textAlign={`center`} mb={4} fontSize={{ base: "xl", md: "2xl" }}>
-          Game Community
-        </Box>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Box gap={`4`} display={`flex`} flexDir={`column`} color={`white`}>
-            <FormControl mb={4}>
-              <Controller
+        <VStack spacing={6}>
+          <Heading size="lg">Login</Heading>
+
+          <form onSubmit={onSubmit} style={{ width: "100%" }}>
+            <VStack spacing={4}>
+              <Input
                 name="email"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <InputComp type="text" place="Email" {...field} />
-                )}
+                type="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                autoComplete="email"
               />
-            </FormControl>
-            <FormControl mb={4}>
-              <Controller
+
+              <Input
                 name="password"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <InputComp type="password" place="Password" {...field} />
-                )}
+                type="password"
+                placeholder="Senha"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                autoComplete="current-password"
               />
-            </FormControl>
-            {errorMessage &&
-            <Text color={'red.400'}>{errorMessage}</Text>
-            }
-            <Button
-              type="submit"
-              bg={"blue.500"}
-              color={"white"}
-              transition={"filter 0.3s"}
-              _hover={{ filter: 'brightness(1.2)' }}
-              boxShadow={'1px 4px 12px -2px rgba(66, 68, 90, 0.8)'}
-            >
-              Entrar
-            </Button>
-          </Box>
-        </form>
-      </Flex>
+
+              {error && (
+                <Text color="red.500" fontSize="sm">
+                  {error}
+                </Text>
+              )}
+
+              <Button
+                type="submit"
+                colorScheme="blue"
+                size="lg"
+                width="full"
+                disabled={isLoading}
+              >
+                {isLoading ? "Entrando..." : "Entrar"}
+              </Button>
+            </VStack>
+          </form>
+        </VStack>
+      </Box>
     </Flex>
   );
 }

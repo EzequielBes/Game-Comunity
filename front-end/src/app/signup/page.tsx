@@ -1,150 +1,147 @@
 "use client";
-import { InputComp } from "@/components/inputcomponent";
-import { signupUser } from "@/gateway/users";
-import { Box, Flex } from "@chakra-ui/layout";
-import { Button, FormControl, FormLabel } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { neonCursor } from "threejs-toys";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Box, Flex, Text, Button, Input, VStack, Heading } from "@chakra-ui/react";
+import { signupUser } from "../../gateway/users";
 
 interface FormData {
-  "full-name": string;
+  fullName: string;
   username: string;
   email: string;
   password: string;
-  "confirm-password": string;
+  confirmPassword: string;
 }
 
 export default function SignupForm() {
-  const { control, handleSubmit } = useForm<FormData>();
-  const [formData, setFormData] = useState<FormData | null>(null);
+  const [formData, setFormData] = useState<FormData>({
+    fullName: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  useEffect(() => {
-    // Adiciona o efeito do cursor neon
-    neonCursor({
-      el: document.getElementById("app") as HTMLElement,
-      shaderPoints: 16,
-      curvePoints: 80,
-      curveLerp: 0.5,
-      radius1: 5,
-      radius2: 30,
-      velocityTreshold: 10,
-      sleepRadiusX: 100,
-      sleepRadiusY: 100,
-      sleepTimeCoefX: 0.0025,
-      sleepTimeCoefY: 0.0025
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
-  }, []);
+  };
 
-  const onSubmit = async (data: FormData) => {
-    console.log("Form Data Submitted:", data);
-    const log = await signupUser(
-      data["full-name"],
-      data.username,
-      data.email,
-      data.password
-    );
-    setFormData(data);
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("As senhas não coincidem");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      await signupUser(
+        formData.fullName,
+        formData.username,
+        formData.email,
+        formData.password
+      );
+      router.push("/login");
+    } catch (err: any) {
+      setError(err.message || "Erro ao criar conta");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <Flex direction={{ base: "column", md: "row" }} height="100vh" bg={"#1A213C"} id="app">
-      <Flex
-        flex={1}
-        height={{ base: "50%", md: "100%" }}
-        align="center"
-        justify="center"
-        overflow="hidden"
-        bg={"#0F172A"}
+    <Flex minH="100vh" align="center" justify="center" bg="gray.50">
+      <Box
+        p={8}
+        maxW="md"
+        w="full"
+        bg="white"
+        rounded="lg"
+        shadow="lg"
       >
-        <Flex
-          zIndex="9999"
-          flex={1}
-          direction="column"
-          align="center"
-          justify="center"
-          p={{ base: 4, md: 6 }}
-          height={{ base: "50%", md: "100%" }}
-          position="absolute"
-          w="100vw"
-          ml="100%"
-          background="rgba(000, 255, 255, 0.1)"
-          backdropFilter="blur(10px)"
-          boxShadow="0 4px 30px rgba(0, 0, 0, 0.5)"
-          border="1px solid rgba(255, 255, 255, 0.2)"
-        >
-          <Box maxW="lg" width="100%" color={`white`}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                        <FormControl mb={4} textAlign="center">
-                          <FormLabel htmlFor="full-name">Full Name</FormLabel>
-                          <Controller
-                            name="full-name"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                              <InputComp
-                                id="full-name"
-                                {...field}
-                                place="Enter your full name"
-                              />
-                            )}
-                          />
-                        </FormControl>
-                        <FormControl mb={4}>
-                          <FormLabel htmlFor="username">Username</FormLabel>
-                          <Controller
-                            name="username"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                              <InputComp
-                                id="username"
-                                {...field}
-                                place="Enter your username"
-                              />
-                            )}
-                          />
-                        </FormControl>
+        <VStack spacing={6}>
+          <Heading size="lg">Criar Conta</Heading>
 
-                        <FormControl mb={4}>
-                          <FormLabel htmlFor="email">Email</FormLabel>
-                          <Controller
-                            name="email"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                              <InputComp id="email" {...field} place="Enter your email" />
-                            )}
-                          />
-                        </FormControl>
+          <form onSubmit={onSubmit} style={{ width: "100%" }}>
+            <VStack spacing={4}>
+              <Input
+                name="fullName"
+                type="text"
+                placeholder="Nome completo"
+                value={formData.fullName}
+                onChange={handleChange}
+                required
+                autoComplete="name"
+              />
 
-                        <FormControl mb={4}>
-                          <FormLabel htmlFor="password">Password</FormLabel>
-                          <Controller
-                            name="password"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                              <InputComp
-                                id="password"
-                                {...field}
-                                place="Enter your password"
-                              />
-                            )}
-                          />
-                        </FormControl>
+              <Input
+                name="username"
+                type="text"
+                placeholder="Nome de usuário"
+                value={formData.username}
+                onChange={handleChange}
+                required
+                autoComplete="username"
+              />
 
+              <Input
+                name="email"
+                type="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                autoComplete="email"
+              />
 
+              <Input
+                name="password"
+                type="password"
+                placeholder="Senha"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                autoComplete="new-password"
+              />
 
-                        <Button type="submit" colorScheme="teal" width="full">
-                          Sign Up
-                        </Button>
-                      </form>
+              <Input
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirmar senha"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+                autoComplete="new-password"
+              />
 
+              {error && (
+                <Text color="red.500" fontSize="sm">
+                  {error}
+                </Text>
+              )}
 
-          </Box>
-        </Flex>
-      </Flex>
+              <Button
+                type="submit"
+                colorScheme="blue"
+                size="lg"
+                width="full"
+                disabled={isLoading}
+              >
+                {isLoading ? "Criando conta..." : "Criar Conta"}
+              </Button>
+            </VStack>
+          </form>
+        </VStack>
+      </Box>
     </Flex>
   );
 }

@@ -1,6 +1,6 @@
 // socket.ts
 import { io, Socket as SocketIOClientSocket } from "socket.io-client";
-import { AppSocket } from "./socketadapter";
+import { AppSocket } from "./socketadpter";
 
 class Socket implements AppSocket {
   private static instance: Socket;
@@ -31,7 +31,7 @@ class Socket implements AppSocket {
     }
   }
 
-  public disconnect(): void {
+  public disconect(): void {
     if (this._socket) {
       this._socket.disconnect();
       this._socket = null;

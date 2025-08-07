@@ -1,4 +1,3 @@
-import mariadb from "mariadb"
 import dotenv from "dotenv";
 import pgp from "pg-promise";
 dotenv.config();
@@ -11,7 +10,7 @@ export interface DatabaseConnection {
 export class PostgresDatabase implements DatabaseConnection {
   connection: any
   constructor () {
-    this.connection = pgp()("postgresql://postgres:root@localhost:5432/users")
+    this.connection = pgp()("postgresql://postgres:postgres@localhost:5432/users")
   }
 
   query(statement: string, params: any): Promise<any> {

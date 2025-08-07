@@ -1,0 +1,183 @@
+### Trade System Tests
+
+### 1. Criar proposta de troca
+POST http://localhost:3004/marketplace/createTrade
+Content-Type: application/json
+
+{
+  "proposer_id": "user123",
+  "receiver_id": "user456",
+  "target_post_id": "post123",
+  "offers": [
+    {
+      "post_id": "post456",
+      "cash_amount": null
+    },
+    {
+      "post_id": null,
+      "cash_amount": 500.00
+    }
+  ],
+  "message": "Interessado em trocar meu item + R$ 500,00 pelo seu item",
+  "expiresInHours": 72
+}
+
+### 2. Buscar trades do usuário
+GET http://localhost:3004/marketplace/getUserTrades?userId=user123
+
+### 3. Aceitar proposta de troca
+PUT http://localhost:3004/marketplace/updateTradeStatus
+Content-Type: application/json
+
+{
+  "tradeId": "TRADE_ID_AQUI",
+  "userId": "user456",
+  "status": "accepted"
+}
+
+### 4. Rejeitar proposta de troca
+PUT http://localhost:3004/marketplace/updateTradeStatus
+Content-Type: application/json
+
+{
+  "tradeId": "TRADE_ID_AQUI",
+  "userId": "user456",
+  "status": "rejected"
+}
+
+### 5. Cancelar proposta de troca
+DELETE http://localhost:3004/marketplace/cancelTrade
+Content-Type: application/json
+
+{
+  "trade_id": "TRADE_ID_AQUI",
+  "user_id": "user123"
+}
+
+### Auction System Tests
+
+### 6. Criar leilão
+POST http://localhost:3004/marketplace/createAuction
+Content-Type: application/json
+
+{
+  "post_id": "post789",
+  "seller_id": "user123",
+  "starting_bid": 1000.00,
+  "reserve_price": 1500.00,
+  "duration_hours": 24
+}
+
+### 7. Fazer lance
+POST http://localhost:3004/marketplace/placeBid
+Content-Type: application/json
+
+{
+  "auction_id": "AUCTION_ID_AQUI",
+  "bidder_id": "user456",
+  "bid_amount": 1200.00
+}
+
+### 8. Listar leilões ativos
+GET http://localhost:3004/marketplace/getActiveAuctions
+
+### 9. Listar todos os leilões
+GET http://localhost:3004/marketplace/getAuctions
+
+### 10. Listar leilões com filtros
+GET http://localhost:3004/marketplace/getAuctions?status=active&min_price=1000&limit=10
+
+### 11. Buscar leilão por ID
+GET http://localhost:3004/marketplace/getAuction/AUCTION_ID_AQUI
+
+### 12. Finalizar leilão
+PUT http://localhost:3004/marketplace/endAuction
+Content-Type: application/json
+
+{
+  "auction_id": "AUCTION_ID_AQUI",
+  "user_id": "user123"
+}
+
+### 13. Buscar leilões por vendedor
+GET http://localhost:3004/marketplace/getAuctionsBySeller?seller_id=user123
+
+### Advanced Trade Examples
+
+### 14. Criar proposta de troca complexa
+POST http://localhost:3004/marketplace/createTrade
+Content-Type: application/json
+
+{
+  "proposer_id": "user789",
+  "receiver_id": "user123",
+  "target_post_id": "post_legendary",
+  "offers": [
+    {
+      "post_id": "post_rare_1",
+      "cash_amount": null
+    },
+    {
+      "post_id": "post_rare_2",
+      "cash_amount": null
+    },
+    {
+      "post_id": null,
+      "cash_amount": 2000.00
+    }
+  ],
+  "message": "Ofereço 2 itens raros + R$ 2000,00 pelo seu item lendário",
+  "expiresInHours": 48
+}
+
+### 15. Criar proposta de troca apenas com dinheiro
+POST http://localhost:3004/marketplace/createTrade
+Content-Type: application/json
+
+{
+  "proposer_id": "user456",
+  "receiver_id": "user789",
+  "target_post_id": "post_epic",
+  "offers": [
+    {
+      "post_id": null,
+      "cash_amount": 3000.00
+    }
+  ],
+  "message": "Ofereço R$ 3000,00 pelo seu item épico",
+  "expiresInHours": 24
+}
+
+### Advanced Auction Examples
+
+### 16. Criar leilão de item raro
+POST http://localhost:3004/marketplace/createAuction
+Content-Type: application/json
+
+{
+  "post_id": "post_legendary_sword",
+  "seller_id": "user123",
+  "starting_bid": 5000.00,
+  "reserve_price": 8000.00,
+  "duration_hours": 48
+}
+
+### 17. Fazer lance em leilão
+POST http://localhost:3004/marketplace/placeBid
+Content-Type: application/json
+
+{
+  "auction_id": "AUCTION_ID_AQUI",
+  "bidder_id": "user456",
+  "bid_amount": 5500.00
+}
+
+### 18. Fazer lance maior
+POST http://localhost:3004/marketplace/placeBid
+Content-Type: application/json
+
+{
+  "auction_id": "AUCTION_ID_AQUI",
+  "bidder_id": "user789",
+  "bid_amount": 6000.00
+}

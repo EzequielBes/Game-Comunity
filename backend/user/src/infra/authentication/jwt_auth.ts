@@ -8,7 +8,7 @@ if (!secretKey) {
   throw new Error('SECRET_KEY is not defined in environment variables');
 }
 
-export const generateJsonWebToken = async (account_id:string, name:string, username:string, email:string ):Promise<string> => {
+export const generateJsonWebToken = async (account_id:string, name:string, username:string, email:string ):Promise<{token: string, user: {account_id: string, name: string, username: string, email: string}}> => {
   const accountData = {
     account_id,
     name,
@@ -16,7 +16,10 @@ export const generateJsonWebToken = async (account_id:string, name:string, usern
     email
   }
   const token = jwt.sign(accountData, secretKey, {expiresIn: '12h'})
-  return token
+  return {
+    token,
+    user: accountData
+  }
 }
 
 

@@ -1,5 +1,5 @@
 "use client"
-import { addfriends, getAllfriends, getPendentRequest } from '@/api/friends';
+import { addfriends, getAllfriends, getPendentRequest } from '../gateway/friends';
 import { PrivateChat } from '@/components/chatcomponent';
 import {
     Avatar,
@@ -181,11 +181,9 @@ const Chat: React.FC = () => {
       </Flex>
 
      <PrivateChat destinatario={{
-      username: "eze",
-      userid: "2333"
+      friend: "eze"
      }} enviador={{
-        username: 'morgana',
-        userid: '223'
+        sender: 'morgana'
       }} />
 
     </Flex>

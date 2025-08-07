@@ -28,9 +28,9 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
 
   const handleSubmitMessage = async () => {
     if (newMessage.trim() !== "") {
-      const updatedMessages = [
+      const updatedMessages: Message[] = [
         ...(messages[destinatario.friend || ""] || []),
-        { text: newMessage, sender: "me", timestamp: new Date().toLocaleTimeString() },
+        { text: newMessage, sender: "me" as const, timestamp: new Date().toLocaleTimeString() },
       ];
 
       if (!destinatario.friend) return;
@@ -57,7 +57,7 @@ export function PrivateChat({ destinatario, enviador }: ChatProps) {
     hasFetchedMessages.current = true;
     const oldMessages = await getMessages(enviador.sender, destinatario.friend);
 
-    const formattedMessages = oldMessages.map((msg: any) => ({
+    const formattedMessages: Message[] = oldMessages.map((msg: any) => ({
       text: msg.messageContent,
       sender: msg.senderUsername === enviador.sender ? "me" : "them",
       timestamp: new Date(msg.date).toLocaleTimeString(),
